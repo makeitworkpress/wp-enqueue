@@ -40,4 +40,4 @@ Accepts an array with admin page hooks, suck as edit.php on which you want to in
 ### Create instance
 Create a new instance of the WP_Enqueue class with your assets array as argument.
 
-            $optimize = new MT_WP_Enqueue($assets);
+            $enqueue = new MT_WP_Enqueue($assets);
