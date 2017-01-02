@@ -1,5 +1,5 @@
 # wp-enqueue
-The WP Enqueue class provides a wrapper to make enqueueing scripts and styles in WordPress more easey.
+The WP Enqueue class provides a wrapper to make enqueueing scripts and styles in WordPress more easy.
 
 ## Usage
 Include the WP Optimize class in your plugin, theme or child theme file. 
