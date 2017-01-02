@@ -25,15 +25,15 @@ class MT_WP_Enqueue {
      */
     private function enqueue() {
         if( isset($this->frontAssets) ) {
-            add_action('wp_enqueue_scripts', array($this, 'enqueueFront'));    
+            add_action('wp_enqueue_scripts', array($this, 'enqueueFront'), 20);    
         }
         
         if( isset($this->adminAssets) ) {
-            add_action('admin_enqueue_scripts', array($this, 'enqueueAdmin'), 10, 1);    
+            add_action('admin_enqueue_scripts', array($this, 'enqueueAdmin'), 20, 1);    
         } 
         
         if( isset($this->loginAssets) ) {
-            add_action('login_enqueue_scripts', array($this, 'enqueueLogin'));    
+            add_action('login_enqueue_scripts', array($this, 'enqueueLogin'), 20);    
         }
         
     }
@@ -63,8 +63,8 @@ class MT_WP_Enqueue {
             $type   = substr($asset['src'], -2, 2);
             
             // Determine the action based upon their type.
-            $asset['action'] = 'wp_' . $asset['action'] . '_';
-            $asset['action'] .= $type == 'js' ? 'script' : 'style'; 
+            $asset['function'] = 'wp_' . $asset['action'] . '_';
+            $asset['function'] .= $type == 'js' ? 'script' : 'style'; 
             $asset['mix']     = $type == 'js' ? $asset['in_footer'] : $asset['media'];
                 
             // Add the assets to their context
@@ -85,7 +85,7 @@ class MT_WP_Enqueue {
      */
     public function enqueueFront() {        
         foreach( $this->frontAssets as $asset ) {         
-            $asset['action']($asset['handle'], $asset['src'], $asset['deps'], $asset['ver'], $asset['mix']);    
+            $this->action($asset);
         }
     }
     
@@ -105,7 +105,7 @@ class MT_WP_Enqueue {
                 continue;
             }            
             
-            $asset['action']($asset['handle'], $asset['src'], $asset['deps'], $asset['ver'], $asset['mix']);     
+            $this->action($asset);     
         }  
     } 
     
@@ -114,8 +114,21 @@ class MT_WP_Enqueue {
      */
     public function enqueueLogin() {
         foreach( $this->loginAssets as $asset ) {
-            $asset['action']($asset['handle'], $asset['src'], $asset['deps'], $asset['ver'], $asset['mix']);    
+            $this->action($asset);    
         }
-    }    
+    } 
+    
+    /**
+     * Executes the action itself
+     *
+     * @param array $asset The asset with the properties
+     */
+    private function action($asset) {
+        if($asset['action'] == 'dequeue') {
+            $asset['function']($asset['handle']);    
+        } else {
+            $asset['function']($asset['handle'], $asset['src'], $asset['deps'], $asset['ver'], $asset['mix']); 
+        }     
+    }
 
 }
