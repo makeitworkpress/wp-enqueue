@@ -10,8 +10,8 @@ You can add scripts and styles in one array, following the syntax as advised by 
 A basic example of an array of assets:
 
             $assets = array(
-                array('handle' => 'some-js', 'src' => get_stylesheet_directory_uri() . '/test.js', array(), NULL, true)
-                array('handle' => 'some-css', 'src' => get_stylesheet_directory_uri() . '/test.css', array(), NULL, 'all'),                
+                array('handle' => 'some-js', 'src' => get_stylesheet_directory_uri() . '/test.js', 'deps' => array(), 'ver' => NULL, 'in_footer' => true)
+                array('handle' => 'some-css', 'src' => get_stylesheet_directory_uri() . '/test.css', 'deps' => array(), 'ver' => NULL, 'media' => 'all'),                
                 array('handle' => 'some-css-front-and-admin', 'src' => get_stylesheet_directory_uri() . '/test.css', 'context' => 'both'),                
                 array('handle' => 'some-admin-js', 'src' => get_stylesheet_directory_uri() . '/admin.js', 'context' => 'admin')
                 array('handle' => 'some-login-css', 'src' => get_stylesheet_directory_uri() . '/login.css', 'context' => 'login')
