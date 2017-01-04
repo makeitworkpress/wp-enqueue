@@ -35,7 +35,7 @@ Allows you to specifically define the context in which something needs to be enq
 Accepts an array with admin page hooks, such as edit.php on which you want to exclude the enqueueing of admin scripts and styles
 
 **include (array)**
-Accepts an array with admin page hooks, suck as edit.php on which you want to include the enqueueing of admin scripts and styles
+Accepts an array with admin page hooks, such as edit.php on which you want to include the enqueueing of admin scripts and styles
 
 ### Create instance
 Create a new instance of the WP_Enqueue class with your assets array as argument.
