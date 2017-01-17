@@ -2,7 +2,7 @@
 The WP Enqueue class provides a wrapper to make enqueueing scripts and styles in WordPress more easily.
 
 ## Usage
-Include the WP Enqueue class in your plugin, theme or child theme file. 
+Include the WP Enqueue class in your plugin, theme or child theme file or use an autoloader. 
 
 ### Add your scripts and styles as one array
 You can add scripts and styles in one array, following the syntax as advised by WordPress. The script automatically recognizes whether you are adding a stylesheet or css file. In addition, you can add additional parameters to alter the behaviour of your scripts and styles.
