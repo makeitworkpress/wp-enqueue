@@ -1,5 +1,5 @@
 # wp-enqueue
-The WP Enqueue class provides a wrapper to make enqueueing scripts and styles in WordPress more easy.
+The WP Enqueue class provides a wrapper to make enqueueing scripts and styles in WordPress more easily.
 
 ## Usage
 Include the WP Enqueue class in your plugin, theme or child theme file. 
@@ -22,6 +22,27 @@ A basic example of an array of assets:
             
 All scripts and styles are enqueued with a priority of 20, so later as the default usage.
 
+### Basic Properties
+The basic properties follow the definitions as set by WordPress.
+
+**handle (string)**
+The handle to register your script or style one.
+
+**src (string)**
+The uri to where the script or style can be found.
+
+**deps (array)**
+The array with dependencies which need to be load if this script or style is enqueued.
+
+**ver (string)**
+The version of the script or style.
+
+**in_footer (boolean)**
+Whether the script should be load just before the closing of the body tag or in the head section. Only applies to scripts.
+
+**media (string)**
+For which media the stylesheet is. Only applies to styles.
+
 ### Additional Properties
 You can add additional properties in your array which extend the functionality of enqueueing.
 
@@ -40,4 +61,4 @@ Accepts an array with admin page hooks, such as edit.php on which you want to in
 ### Create instance
 Create a new instance of the WP_Enqueue class with your assets array as argument.
 
-            $enqueue = new MT_WP_Enqueue($assets);
+            $enqueue = new Classes\WP_Enqueue\MT_WP_Enqueue($assets);

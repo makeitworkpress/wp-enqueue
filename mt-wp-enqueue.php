@@ -5,6 +5,8 @@
  * @author Michiel Tramper - https://michieltramper.com & https://www.makeitworkpress.com
  * @todo Built include/exclude for front-end enqueueing based on is_x parameters
  */
+namespace Classes\WP_Enqueue;
+
 defined( 'ABSPATH' ) or die( 'Go eat veggies!' );
 
 class MT_WP_Enqueue {
@@ -24,13 +26,14 @@ class MT_WP_Enqueue {
      * Enqueues our scripts and styles, but only if we have them
      */
     private function enqueue() {
+        
         if( isset($this->frontAssets) ) {
             add_action('wp_enqueue_scripts', array($this, 'enqueueFront'), 20);    
         }
         
         if( isset($this->adminAssets) ) {
             add_action('admin_enqueue_scripts', array($this, 'enqueueAdmin'), 20, 1);    
-        } 
+        }
         
         if( isset($this->loginAssets) ) {
             add_action('login_enqueue_scripts', array($this, 'enqueueLogin'), 20);    
