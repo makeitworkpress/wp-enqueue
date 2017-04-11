@@ -3,7 +3,6 @@
  * Class wrapper for enqueing scripts and styles
  *
  * @author Michiel Tramper - https://michieltramper.com & https://www.makeitworkpress.com
- * @todo Built include/exclude for front-end enqueueing based on is_x parameters
  */
 namespace Classes\WP_Enqueue;
 
@@ -16,14 +15,14 @@ class MT_WP_Enqueue {
      *
      * @param array $assets The array with the assets, namely scripts or styles, to be enqueued
      */
-    public function __construct(Array $assets = array()) {
+    public function __construct( Array $assets = array() ) {
         $this->assets = $assets;
         $this->examine();
         $this->enqueue();
     }
     
     /**
-     * Enqueues our scripts and styles, but only if we have them
+     * Enqueues our scripts and styles, but only if we have them set.
      */
     private function enqueue() {
         
@@ -42,33 +41,35 @@ class MT_WP_Enqueue {
     }
     
     /**
-     * Examines the array of assets and add them in the right array
+     * Examines the array of assets and formalize their properties
      */
     private function examine() {
         
-        // Loop through the various assets
         foreach( $this->assets as $asset ) {
             
             // Default values for each of the assets
             $defaults = array(
-                'action'    => 'enqueue',
-                'context'   => '',
-                'deps'      => array(),
-                'exclude'   => false,
-                'include'   => false,
-                'in_footer' => true,
-                'media'     => 'all',
-                'mix'       => '',
-                'ver'       => false,
+                'action'    => 'enqueue',   // The default action. Accepts enqueue, dequeue and register.
+                'context'   => '',          // The context, in other words where to enqueue. Accepts admin, both and login. Defaults to front-end.
+                'deps'      => array(),     // Dependencies for the script.
+                'bare'      => false,       // If we only need to enqueue the script or style without any arguments (a bare action)
+                'exclude'   => '',          // To exclude an asset somewhere. Accepts page names for admin, or conditionals such as array(is_page, id) for front-end.
+                'include'   => '',          // To include an asset somewhere. Accepts page names for admin, or conditionals such as array(is_page, id) for front-end.
+                'in_footer' => true,        // Whether to enqueue the script in the footer or not
+                'localize'  => array(),     // If we need to add localized variables to our script
+                'media'     => 'all',       // The media for which the style is
+                'name'      => '',          // The object name that is used for localizing scripts
+                'ver'       => false        // Whether to include the version or not
             );
             
-            $asset  = wp_parse_args($asset, $defaults);
-            $type   = substr($asset['src'], -2, 2);
+            $asset  = wp_parse_args($asset, $defaults); // Parse arguments
+            $type   = substr($asset['src'], -2, 2);     // Check if we have a .js extension. A little bit dirty, but it works.
             
-            // Determine the action based upon their type.
-            $asset['function'] = 'wp_' . $asset['action'] . '_';
-            $asset['function'] .= $type == 'js' ? 'script' : 'style'; 
-            $asset['mix']     = $type == 'js' ? $asset['in_footer'] : $asset['media'];
+            // Determine the type and action based upon their type.
+            $asset['type']      = $type == 'js' ? 'script' : 'style';
+            $asset['function']  = 'wp_' . $asset['action'] . '_';
+            $asset['function'] .= $asset['type']; 
+            $asset['mix']       = $type == 'js' ? $asset['in_footer'] : $asset['media'];
                 
             // Add the assets to their context
             if( $asset['context'] == 'admin' || $asset['context'] == 'both' ) {
@@ -86,16 +87,35 @@ class MT_WP_Enqueue {
     /**
      * Enqueues the front-end scripts and styles
      */
-    public function enqueueFront() {        
-        foreach( $this->frontAssets as $asset ) {         
+    public function enqueueFront() {
+        
+        foreach( $this->frontAssets as $asset ) {
+            
+            // Set actions
+            $include = is_array($asset['include']) ? $asset['include'][0] : $asset['include']; 
+
+            // If we are not on a page where it should be included
+            if( $include && ! call_user_func_array($include, array( isset($asset['include'][1]) ? $asset['include'][1] : '' )) ) {
+                continue;
+            }
+            
+            $exclude = is_array($asset['exclude']) ? $asset['exclude'][0] : $asset['exclude']; 
+            
+            // If we are on a page where an asset should be excluded
+            if( $exclude && call_user_func_array($exclude, array( isset($asset['exclude'][1]) ? $asset['exclude'][1] : '' )) ) {
+                continue;
+            }             
+            
             $this->action($asset);
         }
+        
     }
     
     /**
       * Enqueues the admin scripts and styles
      */
-    public function enqueueAdmin($hook) {
+    public function enqueueAdmin( $hook ) {
+        
         foreach( $this->adminAssets as $asset ) {
             
             // If we are not on a page where it should be included
@@ -108,17 +128,23 @@ class MT_WP_Enqueue {
                 continue;
             }            
             
-            $this->action($asset);     
-        }  
+            $this->action($asset); 
+            
+        }
+        
     } 
     
     /**
-      * Enqueues the login scripts and styles
+     * Enqueues the login scripts and styles
      */
     public function enqueueLogin() {
+        
         foreach( $this->loginAssets as $asset ) {
-            $this->action($asset);    
+            
+            $this->action($asset); 
+            
         }
+        
     } 
     
     /**
@@ -127,11 +153,19 @@ class MT_WP_Enqueue {
      * @param array $asset The asset with the properties
      */
     private function action($asset) {
-        if($asset['action'] == 'dequeue') {
-            $asset['function']($asset['handle']);    
+        
+        // Enqueing, registering and dequeing.
+        if( $asset['action'] == 'dequeue' || $asset['bare'] ) {
+            $asset['function']( $asset['handle'] );    
         } else {
-            $asset['function']($asset['handle'], $asset['src'], $asset['deps'], $asset['ver'], $asset['mix']); 
-        }     
+            $asset['function']( $asset['handle'], $asset['src'], $asset['deps'], $asset['ver'], $asset['mix'] ); 
+        } 
+        
+        // Localizing scripts
+        if( $asset['type'] == 'script' && $asset['localize'] && $asset['name'] ) {
+            wp_localize_script( $asset['handle'], $asset['name'], $asset['localize'] );    
+        }
+        
     }
 
 }
