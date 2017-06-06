@@ -4,11 +4,11 @@
  *
  * @author Michiel Tramper - https://michieltramper.com & https://www.makeitworkpress.com
  */
-namespace Classes\WP_Enqueue;
+namespace WP_Enqueue;
 
 defined( 'ABSPATH' ) or die( 'Go eat veggies!' );
 
-class MT_WP_Enqueue {
+class Enqueue {
     
     /**
      * Set the initial state of the class
