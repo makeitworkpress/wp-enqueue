@@ -4,7 +4,7 @@
  *
  * @author Michiel Tramper - https://michieltramper.com & https://www.makeitworkpress.com
  */
-namespace WP_Enqueue;
+namespace MakeitWorkPress\WP_Enqueue;
 
 defined( 'ABSPATH' ) or die( 'Go eat veggies!' );
 

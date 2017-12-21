@@ -61,4 +61,4 @@ Accepts an array with admin page hooks, such as edit.php on which you want to in
 ### Create instance
 Create a new instance of the WP_Enqueue class with your assets array as argument.
 
-            $enqueue = new WP_Enqueue\Enqueue($assets);
+            $enqueue = new MakeitWorkPress\WP_Enqueue\Enqueue($assets);
