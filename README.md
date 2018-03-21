@@ -10,19 +10,19 @@ You can add scripts and styles in one array, following the syntax as advised by 
 A basic example of an array of assets:
 
 ```php
-    $assets = array(
-        array('handle' => 'some-js', 'src' => get_stylesheet_directory_uri() . '/test.js', 'deps' => array(), 'ver' => NULL, 'in_footer' => true)
-        array('handle' => 'some-css', 'src' => get_stylesheet_directory_uri() . '/test.css', 'deps' => array(), 'ver' => NULL, 'media' => 'all'),                
-        array('handle' => 'some-css-front-and-admin', 'src' => get_stylesheet_directory_uri() . '/test.css', 'context' => 'both'),                
-        array('handle' => 'some-admin-js', 'src' => get_stylesheet_directory_uri() . '/admin.js', 'context' => 'admin')
-        array('handle' => 'some-login-css', 'src' => get_stylesheet_directory_uri() . '/login.css', 'context' => 'login')
-        array('handle' => 'some-exluded-css', 'src' => get_stylesheet_directory_uri() . '/exclude.css', 'context' => 'admin', 'exclude' => array('edit.php'))
-        array('handle' => 'some-included-css', 'src' => get_stylesheet_directory_uri() . '/include.css', 'context' => 'admin', 'include' => array('edit.php'))
-        array('handle' => 'some-existing-css', 'action' => 'dequeue')
-    );
+$assets = array(
+    array('handle' => 'some-js', 'src' => get_stylesheet_directory_uri() . '/test.js', 'deps' => array(), 'ver' => NULL, 'in_footer' => true)
+    array('handle' => 'some-css', 'src' => get_stylesheet_directory_uri() . '/test.css', 'deps' => array(), 'ver' => NULL, 'media' => 'all'),                
+    array('handle' => 'some-css-front-and-admin', 'src' => get_stylesheet_directory_uri() . '/test.css', 'context' => 'both'),                
+    array('handle' => 'some-admin-js', 'src' => get_stylesheet_directory_uri() . '/admin.js', 'context' => 'admin')
+    array('handle' => 'some-login-css', 'src' => get_stylesheet_directory_uri() . '/login.css', 'context' => 'login')
+    array('handle' => 'some-exluded-css', 'src' => get_stylesheet_directory_uri() . '/exclude.css', 'context' => 'admin', 'exclude' => array('edit.php'))
+    array('handle' => 'some-included-css', 'src' => get_stylesheet_directory_uri() . '/include.css', 'context' => 'admin', 'include' => array('edit.php'))
+    array('handle' => 'some-existing-css', 'action' => 'dequeue')
+);
 ```
             
-All scripts and styles are enqueued with a priority of 20, so later as the default usage.
+All scripts and styles are enqueued with a priority of 20, which is later as the default usage.
 
 ### Basic Properties
 The basic properties follow the definitions as set by WordPress.
@@ -61,11 +61,11 @@ Allows you to specifically define the context in which something needs to be enq
 Accepts an array with admin page hooks, such as ``'edit.php'`` on which you want to exclude the enqueueing of admin scripts and styles or a set of conditionals such as ``'is_page'`` for front-end enqueing.
 
 **include (array)**
-Accepts an array with admin page hooks, such as edit.php on which you want to include the enqueueing of admin scripts and styles or a set of conditionals such as ``'is_page'`` for front-end enqueing.
+Accepts an array with admin page hooks, such as ``'edit.php'`` on which you want to include the enqueueing of admin scripts and styles or a set of conditionals such as ``'is_page'`` for front-end enqueing.
 
 ### Create instance
 Create a new instance of the WP_Enqueue class with your assets array as argument.
 
 ```php
-    $enqueue = new MakeitWorkPress\WP_Enqueue\Enqueue($assets);
+$enqueue = new MakeitWorkPress\WP_Enqueue\Enqueue($assets);
 ```
